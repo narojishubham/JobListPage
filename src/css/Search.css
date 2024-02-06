@@ -1,0 +1,113 @@
+.dept-dropdown {
+  width: 100%;
+}
+
+.location-dropdown {
+  width: 100%;
+}
+
+.function-dropdown {
+  width: 100%;
+}
+
+.col {
+  margin: auto;
+}
+
+.searchBox {
+  width: 100%;
+}
+
+.filter .input-group {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.input-group-btn {
+  position: relative;
+  background-color: white;
+  right: 0;
+  border: 1px solid #ccc;
+  border-left: 0;
+  text-align: right;
+  width: 100px;
+  z-index: 1;
+  border-radius: 0 1px;
+}
+
+.input-group:hover .closeButton {
+  opacity: 1 !important;
+}
+
+.search {
+  border: 1px solid #ccc;
+}
+
+.filter-search .input-group .form-control {
+  padding-right: 50px;
+  border-radius: 2px;
+  background: #fff !important;
+  font-size: 85%;
+}
+
+.btn-link {
+  background-color: transparent !important;
+  font-weight: normal;
+  border-radius: 0;
+}
+
+.searchBox {
+  padding: 30px;
+  background: #f4f4f4;
+  margin-bottom: 40px;
+}
+
+.filter-selected {
+  margin: 20px 0 40px;
+  padding: 20px 30px;
+  background: #f4f4f4;
+  font-size: 16px;
+  width: 100%;
+}
+
+.closeButton {
+  background-color: transparent;
+  opacity: 0;
+}
+
+.closeButton:hover {
+  cursor: pointer;
+  opacity: 1;
+}
+
+.pull-right {
+  float: right !important;
+}
+.filter-selected a {
+  cursor: pointer;
+}
+
+a {
+  color: #4b96e6;
+  text-decoration: none;
+  background-color: transparent;
+}
+
+.filter-selected span {
+  margin: 3px;
+  border-color: #e5e7f5;
+  padding: 4px 24px 4px 10px;
+  background: #fff;
+  position: relative;
+  border-radius: 2px;
+  display: inline-block;
+}
+
+.filter-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 12px;
+  color: #4b96e6;
+}
