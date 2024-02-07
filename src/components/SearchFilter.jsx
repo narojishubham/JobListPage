@@ -207,7 +207,7 @@ function SearchFilter() {
   }, [retainFilter]);
 
   return (
-    <div>
+    <div style={{ width: "1300px", margin: "0 auto" }}>
       <div className="searchBox">
         <div className="input-group">
           <input
