@@ -31,18 +31,24 @@ function SearchFilter() {
 
   const [localStorageDepartment, setLocalstorageDep] = useState();
   useEffect(() => {
-    setLocalstorageDep(JSON.parse(localStorage.getItem("department")));
-  }, []);
+    setLocalstorageDep(
+      JSON.parse(localStorage.getItem("department")) || selectedDepartment
+    );
+  }, [selectedDepartment]);
 
   const [localStorageLocation, setLocalstorageLoc] = useState();
   useEffect(() => {
-    setLocalstorageLoc(JSON.parse(localStorage.getItem("location")));
-  }, [LocationOptions]);
+    setLocalstorageLoc(
+      JSON.parse(localStorage.getItem("location")) || selectedLocation
+    );
+  }, [selectedLocation]);
 
   const [localStorageFunction, setLocalstorageFuc] = useState();
   useEffect(() => {
-    setLocalstorageFuc(JSON.parse(localStorage.getItem("function1")));
-  }, [FunctionsOptions]);
+    setLocalstorageFuc(
+      JSON.parse(localStorage.getItem("function1")) || selectedFunction
+    );
+  }, [selectedFunction]);
   const getDepartment = async () => {
     try {
       const response = await axios.get(
@@ -112,15 +118,21 @@ function SearchFilter() {
     }
   };
 
-  const getJobsSorting = async (
-    searchText,
-    Department,
-    Location,
-    Function1
-  ) => {
+  const getJobsSorting = async (Department, Location, Function1) => {
     try {
       let response = await axios.get(
-        `https://demo.jobsoid.com/api/v1/jobs?q=${searchText}&dept=${Department?.id}&loc=${Location?.id}&fun=${Function1?.id}`
+        `https://demo.jobsoid.com/api/v1/jobs?q=&dept=${Department?.id}&loc=${Location?.id}&fun=${Function1?.id}`
+      );
+      setJobs(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const getJobsSearch = async (searchText) => {
+    try {
+      let response = await axios.get(
+        `https://demo.jobsoid.com/api/v1/jobs?q=${searchText}&dept=&loc=&fun=`
       );
       setJobs(response.data);
     } catch (error) {
@@ -143,20 +155,11 @@ function SearchFilter() {
     if (filteredDepartment.length > 0) {
       localStorage.setItem("retainFilter", JSON.stringify(filteredDepartment));
       setRetainFilter(JSON.parse(localStorage.getItem("retainFilter")));
-
-      if (
-        selectedDepartment === null ||
-        selectedFunction === null ||
-        selectedLocation === null
-      ) {
-        console.log("ititi");
-        getJobsSorting(
-          searchText,
-          localStorageDepartment,
-          localStorageLocation,
-          localStorageFunction
-        );
-      }
+      // getJobsSorting(
+      //   localStorageDepartment,
+      //   localStorageLocation,
+      //   localStorageFunction
+      // );
     } else {
       setRetainFilter([]);
       setSelectedDepartment([]);
@@ -170,22 +173,24 @@ function SearchFilter() {
   useEffect(() => {
     if (showFilter?.length > 0) {
       setTimeout(() => {
-        getJobsSorting();
+        getJobsSorting(
+          localStorageDepartment,
+          localStorageLocation,
+          localStorageFunction
+        );
       }, 1000);
     }
-  }, [
-    showFilter,
-    localStorageDepartment,
-    localStorageLocation,
-    localStorageFunction,
-  ]);
+  }, [localStorageDepartment, localStorageLocation, localStorageFunction]);
 
   const clearAllFilter = (e) => {
     e.preventDefault();
     setFilteredDepartment([]);
     setRetainFilter([]);
-    localStorage.setItem("retainFilter", JSON.stringify(filteredDepartment));
+    setLocalstorageFuc();
+    setLocalstorageDep();
+    setLocalstorageLoc();
     localStorage.removeItem("retainFilter");
+    localStorage.setItem("retainFilter", JSON.stringify(filteredDepartment));
     localStorage.removeItem("department");
     localStorage.removeItem("location");
     localStorage.removeItem("function1");
@@ -193,7 +198,7 @@ function SearchFilter() {
 
   const onHandleSearch = (e) => {
     e.preventDefault();
-    getJobsSorting();
+    getJobsSearch(searchText);
   };
 
   useEffect(() => {
@@ -207,7 +212,7 @@ function SearchFilter() {
   }, [retainFilter]);
 
   return (
-    <div style={{ width: "1300px", margin: "0 auto" }}>
+    <div style={{ width: " 1300px", margin: "0 auto" }}>
       <div className="searchBox">
         <div className="input-group">
           <input
@@ -241,12 +246,7 @@ function SearchFilter() {
                 onChange={(e) => {
                   setSelectedDepartment(e.value), handleChangeFilter(e);
                   localStorage.setItem("department", JSON.stringify(e.value));
-                  getJobsSorting(
-                    searchText,
-                    e.value,
-                    selectedLocation,
-                    selectedFunction
-                  );
+                  getJobsSorting(e.value, selectedLocation, selectedFunction);
                 }}
                 placeholder="Department"
                 className="dept-dropdown"
@@ -266,12 +266,7 @@ function SearchFilter() {
                 onChange={(e) => {
                   setSelectedLocation(e.value), handleChangeFilter(e);
                   localStorage.setItem("location", JSON.stringify(e.value));
-                  getJobsSorting(
-                    searchText,
-                    selectedDepartment,
-                    e.value,
-                    selectedFunction
-                  );
+                  getJobsSorting(selectedDepartment, e.value, selectedFunction);
                 }}
               ></Dropdown>
             </div>
@@ -284,12 +279,7 @@ function SearchFilter() {
                 onChange={(e) => {
                   setSelectedFunction(e.value), handleChangeFilter(e);
                   localStorage.setItem("function1", JSON.stringify(e.value));
-                  getJobsSorting(
-                    searchText,
-                    selectedDepartment,
-                    selectedLocation,
-                    e.value
-                  );
+                  getJobsSorting(selectedDepartment, selectedLocation, e.value);
                 }}
                 optionLabel="name"
                 filter
