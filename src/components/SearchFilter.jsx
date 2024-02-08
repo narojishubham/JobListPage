@@ -19,9 +19,12 @@ function SearchFilter() {
   const [selectedFunction, setSelectedFunction] = useState(
     JSON.parse(localStorage.getItem("function1"))
   );
-  const [retainFilter, setRetainFilter] = useState(
-    JSON.parse(localStorage.getItem("retainFilter")) || []
-  );
+
+const [retainFilter, setRetainFilter] = useState( []);
+useEffect(()=>{
+  setRetainFilter( JSON.parse(localStorage.getItem("retainFilter")))
+},[])
+
   const [DeparmentsOptions, setDeparmentsOptions] = useState([]);
   const [LocationOptions, setLocationOptions] = useState([]);
   const [FunctionsOptions, setFunctionsOptions] = useState([]);
@@ -149,7 +152,10 @@ function SearchFilter() {
 
   const handleRemoveFilter = (id) => {
     setFilteredDepartment(filteredDepartment.filter((item) => item.id !== id));
+    setShowFilter( showFilter.filter((item) => item.id !== id));
+      localStorage.setItem("retainFilter", JSON.stringify(showFilter.filter((item) => item.id !== id)));
   };
+
 
   useEffect(() => {
     if (filteredDepartment.length > 0) {
@@ -190,10 +196,11 @@ function SearchFilter() {
     setLocalstorageDep();
     setLocalstorageLoc();
     localStorage.removeItem("retainFilter");
-    localStorage.setItem("retainFilter", JSON.stringify(filteredDepartment));
+    // localStorage.setItem("retainFilter", JSON.stringify(filteredDepartment));
     localStorage.removeItem("department");
     localStorage.removeItem("location");
     localStorage.removeItem("function1");
+    setShowFilter([])
   };
 
   const onHandleSearch = (e) => {
@@ -246,7 +253,11 @@ function SearchFilter() {
                 onChange={(e) => {
                   setSelectedDepartment(e.value), handleChangeFilter(e);
                   localStorage.setItem("department", JSON.stringify(e.value));
-                  getJobsSorting(e.value, selectedLocation, selectedFunction);
+                   getJobsSorting(
+                    e.value,
+                    selectedLocation,
+                    selectedFunction
+                  );
                 }}
                 placeholder="Department"
                 className="dept-dropdown"
@@ -266,7 +277,11 @@ function SearchFilter() {
                 onChange={(e) => {
                   setSelectedLocation(e.value), handleChangeFilter(e);
                   localStorage.setItem("location", JSON.stringify(e.value));
-                  getJobsSorting(selectedDepartment, e.value, selectedFunction);
+                   getJobsSorting(
+                    selectedDepartment,
+                    e.value,
+                    selectedFunction
+                  );
                 }}
               ></Dropdown>
             </div>
@@ -279,7 +294,11 @@ function SearchFilter() {
                 onChange={(e) => {
                   setSelectedFunction(e.value), handleChangeFilter(e);
                   localStorage.setItem("function1", JSON.stringify(e.value));
-                  getJobsSorting(selectedDepartment, selectedLocation, e.value);
+                    getJobsSorting(
+                    selectedDepartment,
+                    selectedLocation,
+                    e.value,
+                  );
                 }}
                 optionLabel="name"
                 filter
